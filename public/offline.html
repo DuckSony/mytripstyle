@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#5c6bc0" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <title>오프라인 모드 - MyTripStyle</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background-color: #f5f5f5;
+      color: #333;
+      line-height: 1.5;
+    }
+    
+    .header {
+      background-color: #5c6bc0;
+      color: white;
+      padding: 1rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+    }
+    
+    .header h1 {
+      font-size: 1.5rem;
+      margin-left: 0.5rem;
+    }
+    
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      text-align: center;
+    }
+    
+    .offline-icon {
+      width: 100px;
+      height: 100px;
+      margin: 1rem auto;
+      opacity: 0.6;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    h2 {
+      color: #333;
+      margin-bottom: 1rem;
+    }
+    
+    p {
+      margin-bottom: 1.5rem;
+      color: #666;
+    }
+    
+    .info-list {
+      text-align: left;
+      margin: 1.5rem 0;
+      padding-left: 1.5rem;
+    }
+    
+    .info-list li {
+      margin-bottom: 0.5rem;
+    }
+    
+    .btn {
+      background-color: #5c6bc0;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      text-decoration: none;
+      display: inline-block;
+      margin: 0.5rem;
+    }
+    
+    .btn:hover {
+      background-color: #3f51b5;
+    }
+    
+    .btn-outline {
+      background-color: transparent;
+      color: #5c6bc0;
+      border: 1px solid #5c6bc0;
+    }
+    
+    .btn-outline:hover {
+      background-color: #f0f2fd;
+    }
+    
+    .footer {
+      margin-top: 2rem;
+      text-align: center;
+      color: #888;
+      font-size: 0.9rem;
+    }
+    
+    @media (max-width: 480px) {
+      .header h1 {
+        font-size: 1.2rem;
+      }
+      
+      .container {
+        padding: 0 0.75rem;
+      }
+      
+      .btn {
+        width: 100%;
+        margin: 0.5rem 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+      <polyline points="9 22 9 12 15 12 15 22"></polyline>
+    </svg>
+    <h1>MyTripStyle</h1>
+  </header>
+  
+  <div class="container">
+    <div class="offline-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M1 1l22 22"></path>
+        <path d="M16.72 11.06A10.94 10.94 0 0114 12.55"></path>
+        <path d="M5 12.55a10.94 10.94 0 015.17-2.39"></path>
+        <path d="M10.71 5.05A16 16 0 0122.58 9"></path>
+        <path d="M1.42 9a15.91 15.91 0 014.7-2.88"></path>
+        <path d="M8.53 16.11a6 6 0 016.95 0"></path>
+        <circle cx="12" cy="20" r="2"></circle>
+      </svg>
+    </div>
+    
+    <div class="card">
+      <h2>오프라인 상태입니다</h2>
+      <p>현재 인터넷 연결이 없습니다. 일부 기능은 오프라인에서도 사용 가능합니다.</p>
+      
+      <button class="btn" id="refresh-btn">새로고침</button>
+      <a href="/" class="btn btn-outline">홈으로 이동</a>
+    </div>
+    
+    <div class="card">
+      <h2>오프라인에서 사용 가능한 기능</h2>
+      <ul class="info-list">
+        <li>이전에 저장한 장소 보기</li>
+        <li>방문 계획 확인</li>
+        <li>저장된 검색 결과 확인</li>
+        <li>오프라인 데이터 사용</li>
+      </ul>
+    </div>
+    
+    <div class="footer">
+      <p>MyTripStyle &copy; 2023</p>
+    </div>
+  </div>
+  
+  <script>
+    // 새로고침 버튼 기능
+    document.getElementById('refresh-btn').addEventListener('click', function() {
+      window.location.reload();
+    });
+    
+    // 온라인 상태가 되면 자동으로 홈으로 리디렉션
+    window.addEventListener('online', function() {
+      // 약간의 지연 후 리디렉션
+      setTimeout(function() {
+        window.location.href = '/';
+      }, 1000);
+    });
+  </script>
+</body>
+</html>

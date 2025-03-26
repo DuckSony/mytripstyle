@@ -1,0 +1,120 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 유틸리티 함수
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+    
+    function isValidMBTI(mbti) {
+      return mbti is string && 
+        mbti.matches('^[EI][NS][TF][JP]$');
+    }
+    
+    // 제출된 타임스탬프가 현재로부터 5분 이내인지 확인
+    function isRecentTimestamp(timestamp) {
+      return timestamp is timestamp && 
+        duration.between(timestamp, request.time).toMillis() < 5 * 60 * 1000;
+    }
+    
+    // 최대 배열 길이 확인
+    function isValidArrayLength(array, maxLength) {
+      return array is list && array.size() <= maxLength;
+    }
+
+   // 사용자 컬렉션
+    match /users/{userId} {
+      // 기본 읽기 규칙
+      allow read: if isAuthenticated() && (isOwner(userId) || isAdmin());
+      
+      // 생성 규칙
+      allow create: if isAuthenticated() && isOwner(userId) && 
+        request.resource.data.keys().hasAll(['mbti', 'interests', 'createdAt']) &&
+        isValidMBTI(request.resource.data.mbti) &&
+        isValidArrayLength(request.resource.data.interests, 20) &&
+        isRecentTimestamp(request.resource.data.createdAt);
+      
+      // 업데이트 규칙
+      allow update: if isAuthenticated() && isOwner(userId) &&
+        request.resource.data.diff(resource.data).affectedKeys()
+          .hasAny(['mbti', 'interests', 'talents', 'preferredLocations', 'currentMood']) &&
+        (!request.resource.data.keys().hasAny(['mbti']) || isValidMBTI(request.resource.data.mbti)) &&
+        (!request.resource.data.keys().hasAny(['interests']) || isValidArrayLength(request.resource.data.interests, 20)) &&
+        (!request.resource.data.keys().hasAny(['talents']) || isValidArrayLength(request.resource.data.talents, 10)) &&
+        (!request.resource.data.keys().hasAny(['preferredLocations']) || isValidArrayLength(request.resource.data.preferredLocations, 5));
+      
+      // 삭제 규칙
+      allow delete: if isAuthenticated() && (isOwner(userId) || isAdmin());
+      
+      // 사용자 저장 장소 하위 컬렉션
+      match /savedPlaces/{placeId} {
+        allow read: if isAuthenticated() && isOwner(userId);
+        allow create, update: if isAuthenticated() && isOwner(userId);
+        allow delete: if isAuthenticated() && isOwner(userId);
+      }
+      
+      // 방문 기록 하위 컬렉션
+      match /visitHistory/{visitId} {
+        allow read: if isAuthenticated() && isOwner(userId);
+        allow create: if isAuthenticated() && isOwner(userId) &&
+          request.resource.data.keys().hasAll(['placeId', 'visitDate']) &&
+          isRecentTimestamp(request.resource.data.createdAt);
+        allow update, delete: if isAuthenticated() && isOwner(userId);
+      }
+    }
+
+    // 장소 컬렉션
+    match /places/{placeId} {
+      // 모든 인증된 사용자가 읽을 수 있음
+      allow read: if isAuthenticated();
+      
+      // 관리자만 장소 추가/수정/삭제 가능
+      allow create, update, delete: if isAdmin();
+      
+      // 장소 리뷰 하위 컬렉션
+      match /reviews/{reviewId} {
+        allow read: if isAuthenticated();
+        
+        // 인증된 사용자는 리뷰 작성 가능
+        allow create: if isAuthenticated() &&
+          request.resource.data.keys().hasAll(['userId', 'rating', 'content', 'createdAt']) &&
+          request.resource.data.userId == request.auth.uid &&
+          request.resource.data.rating >= 1 &&
+          request.resource.data.rating <= 5 &&
+          request.resource.data.content.size() <= 1000 &&
+          isRecentTimestamp(request.resource.data.createdAt);
+        
+        // 자신의 리뷰만 수정/삭제 가능
+        allow update, delete: if isAuthenticated() && 
+          resource.data.userId == request.auth.uid;
+      }
+    }
+
+    // API 사용량 로그 (관리자만 접근 가능)
+    match /apiUsage/{logId} {
+      allow read: if isAdmin();
+      allow create: if isAuthenticated(); // 인증된 사용자는 로그 생성 가능
+      allow update, delete: if isAdmin();
+    }
+    
+    // 설정 및 구성 (관리자만 접근 가능)
+    match /appConfig/{configId} {
+      allow read: if isAuthenticated(); // 모든 인증된 사용자가 읽을 수 있음
+      allow write: if isAdmin(); // 관리자만 쓰기 가능
+    }
+    
+    // 관리자 목록 (관리자만 접근 가능)
+    match /admins/{adminId} {
+      allow read, write: if isAdmin();
+    }
+  }
+} 

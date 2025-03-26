@@ -1,0 +1,65 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // 유틸리티 함수
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+        firestore.exists(/databases/(default)/documents/admins/$(request.auth.uid));
+    }
+    
+    // 파일 크기 제한 (10MB)
+    function isValidFileSize() {
+      return request.resource.size <= 10 * 1024 * 1024;
+    }
+    
+    // 이미지 파일 확인
+    function isImageFile() {
+      return request.resource.contentType.matches('image/.*');
+    }
+
+    // 기본 규칙: 모든 경로는 기본적으로 접근 불가
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+    
+    // 프로필 이미지
+    match /users/{userId}/profile.jpg {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(userId) && isImageFile() && isValidFileSize();
+    }
+
+    // 사용자 업로드 리뷰 이미지
+    match /reviews/{reviewId}/{imageId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && isImageFile() && isValidFileSize();
+      allow update, delete: if isAuthenticated() && 
+        firestore.get(/databases/(default)/documents/places/*/reviews/$(reviewId)).data.userId == request.auth.uid;
+    }
+    
+    // 장소 이미지 (관리자만 업로드 가능)
+    match /places/{placeId}/{imageId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() && isImageFile() && isValidFileSize();
+    }
+
+    // 공개 앱 에셋 (모든 사용자가 읽을 수 있음)
+    match /public/{fileName} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    // 앱 기본 리소스 (기본 이미지 등)
+    match /app_resources/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+  }
+}

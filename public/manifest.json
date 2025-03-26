@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "MyTripStyle",
+  "name": "MyTripStyle - 맞춤형 마이크로 여행 추천",
   "icons": [
     {
       "src": "favicon.ico",
@@ -16,10 +16,49 @@
       "src": "logo512.png",
       "type": "image/png",
       "sizes": "512x512"
+    },
+    {
+      "src": "maskable_icon.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
     }
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "orientation": "portrait",
+  "theme_color": "#5c6bc0",
+  "background_color": "#ffffff",
+  "shortcuts": [
+    {
+      "name": "추천 장소 보기",
+      "short_name": "추천",
+      "description": "맞춤형 여행 장소 추천 보기",
+      "url": "/recommendations",
+      "icons": [{ "src": "shortcut-recommend.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "저장한 장소",
+      "short_name": "저장목록",
+      "description": "저장한 장소 목록 보기",
+      "url": "/saved-places",
+      "icons": [{ "src": "shortcut-saved.png", "sizes": "96x96" }]
+    }
+  ],
+  "description": "MBTI, 관심사, 감정 상태, 위치 정보를 기반으로 맞춤형 마이크로 여행을 추천하는 앱",
+  "categories": ["travel", "lifestyle", "personalization"],
+  "screenshots": [
+    {
+      "src": "screenshot1.png",
+      "type": "image/png",
+      "sizes": "540x1200"
+    },
+    {
+      "src": "screenshot2.png",
+      "type": "image/png",
+      "sizes": "540x1200"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
 }

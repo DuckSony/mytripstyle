@@ -1,13 +1,193 @@
+/* src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+/* 기본 설정 */
+:root {
+  --primary-color: #3f51b5;
+  --secondary-color: #f50057;
+  --transition-timing: 0.3s;
+  --page-transition-duration: 0.4s;
+  --animation-easing: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* 모바일 관련 변수 */
+  --bottom-nav-height: 56px;
+  --header-height: 64px;
+  --tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+/* 모바일에서 오버스크롤 동작 설정 */
+html {
+  overscroll-behavior: contain;
+  overflow-x: hidden;
+  height: 100%;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Noto Sans KR', 'Roboto', 'Arial', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  height: 100%;
+  -webkit-tap-highlight-color: var(--tap-highlight-color);
+  touch-action: manipulation; /* 더블탭 방지 */
+}
+
+#root {
+  height: 100%;
+}
+
+/* 스크롤바 스타일링 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
+
+/* 모바일 텍스트 선택 방지 */
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* 터치 제스처 개선을 위한 스타일 */
+.touch-element {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 버튼 탭/클릭 애니메이션 */
+.btn-tap {
+  transition: transform 0.2s var(--animation-easing);
+}
+
+.btn-tap:active {
+  transform: scale(0.96);
+}
+
+/* 기본 애니메이션 클래스 */
+.fade-in {
+  animation: fadeIn var(--transition-timing) var(--animation-easing);
+}
+
+.slide-up {
+  animation: slideUp var(--transition-timing) var(--animation-easing);
+}
+
+.scale-in {
+  animation: scaleIn var(--transition-timing) var(--animation-easing);
+}
+
+/* 애니메이션 키프레임 정의 */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* 모바일 기기에서 입력 요소 최적화 */
+@media (max-width: 768px) {
+  input, textarea, select, button {
+    font-size: 16px; /* iOS에서 자동 확대 방지 */
+  }
+  
+  /* 모바일에서 하단 네비게이션 영역 확보 */
+  .has-bottom-nav {
+    padding-bottom: calc(var(--bottom-nav-height) + 16px);
+  }
+  
+  /* 모바일에서 스크롤 시 오버바운스 색상 */
+  body {
+    background-color: #fafafa;
+  }
+}
+
+/* iOS 특화 스타일 */
+@supports (-webkit-overflow-scrolling: touch) {
+  body {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* iOS에서 입력 요소 늘어남 방지 */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  textarea {
+    font-size: 16px;
+  }
+}
+
+/* 다크 모드 대응 */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #121212;
+    color: #f5f5f5;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #333;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #666;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #888;
+  }
+}
+
+/* 접근성 개선을 위한 포커스 스타일 */
+:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* 프린트 최적화 */
+@media print {
+  body {
+    background-color: white;
+    color: black;
+  }
+  
+  nav, footer, button, .no-print {
+    display: none !important;
+  }
+}
+
+/* 애니메이션 감소 옵션 지원 */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
