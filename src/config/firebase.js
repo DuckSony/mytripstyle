@@ -145,15 +145,15 @@ const logError = (error, context = {}) => {
 };
 
 // 수정된 코드: 에뮬레이터 모드 강제 비활성화
-if (false) { // process.env.NODE_ENV === 'development' && process.env.REACT_APP_USE_EMULATOR === 'true' 
-  const host = process.env.REACT_APP_EMULATOR_HOST || 'localhost';
-  connectFirestoreEmulator(db, host, 8080);
-  connectAuthEmulator(auth, `http://${host}:9099`);
-  connectStorageEmulator(storage, host, 9199);
-  console.log('[Firebase] 에뮬레이터를 사용합니다.');
-} else {
+//if (false) { // process.env.NODE_ENV === 'development' && process.env.REACT_APP_USE_EMULATOR === 'true' 
+//  const host = process.env.REACT_APP_EMULATOR_HOST || 'localhost';
+//  connectFirestoreEmulator(db, host, 8080);
+//  connectAuthEmulator(auth, `http://${host}:9099`);
+//  connectStorageEmulator(storage, host, 9199);
+//  console.log('[Firebase] 에뮬레이터를 사용합니다.');
+//} else {
   console.log('[Firebase] 실제 Firebase 서비스를 사용합니다.');
-}
+//}
 
 // 이벤트 버스 - 컴포넌트간 통신을 위한 이벤트 관리
 export const firebaseEvents = {
