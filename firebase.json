@@ -1,7 +1,7 @@
 {
   "hosting": {
-    "target": "mytripstyle-app",
-    "public": "build",
+  "site": "mytripstyle",
+  "public": "build",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -61,7 +61,6 @@
       }
     ]
   },
- 
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
@@ -76,7 +75,6 @@
     "source": "functions",
     "runtime": "nodejs16"
   },
- 
   "emulators": {
     "auth": {
       "port": 9099
