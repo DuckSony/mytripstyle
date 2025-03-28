@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "mytripstyle",
     "public": "build",
     "ignore": [
       "firebase.json",
