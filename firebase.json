@@ -1,6 +1,5 @@
 {
   "hosting": {
-    "site": "mytripstyle",
     "public": "build",
     "ignore": [
       "firebase.json",
@@ -100,4 +99,4 @@
   "remoteconfig": {
     "template": "remoteconfig.template.json"
   }
- }
+}
