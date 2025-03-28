@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "mytripstyle",
     "public": "build",
     "ignore": [
       "firebase.json",
@@ -58,63 +59,9 @@
           }
         ]
       }
-    ],
-
-    "targets": {
-      "production": {
-        "hosting": {
-          "site": "my-trip-style-prod",
-          "public": "build",
-          "ignore": [
-            "firebase.json",
-            "**/.*",
-            "**/node_modules/**"
-          ],
-          "rewrites": [
-            {
-              "source": "**",
-              "destination": "/index.html"
-            }
-          ]
-        }
-      },
-      "staging": {
-        "hosting": {
-          "site": "my-trip-style-staging",
-          "public": "build",
-          "ignore": [
-            "firebase.json",
-            "**/.*",
-            "**/node_modules/**"
-          ],
-          "rewrites": [
-            {
-              "source": "**",
-              "destination": "/index.html"
-            }
-          ]
-        }
-      },
-      "dev": {
-        "hosting": {
-          "site": "my-trip-style-dev",
-          "public": "build",
-          "ignore": [
-            "firebase.json",
-            "**/.*",
-            "**/node_modules/**"
-          ],
-          "rewrites": [
-            {
-              "source": "**",
-              "destination": "/index.html"
-            }
-          ]
-        }
-      }
-    }
+    ]
   },
-
+ 
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
@@ -129,7 +76,7 @@
     "source": "functions",
     "runtime": "nodejs16"
   },
-
+ 
   "emulators": {
     "auth": {
       "port": 9099
@@ -153,4 +100,4 @@
   "remoteconfig": {
     "template": "remoteconfig.template.json"
   }
-}
+ }

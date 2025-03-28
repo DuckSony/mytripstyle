@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "dailytrip-8f168"
-  }
+  },
+  "targets": {
+    "dailytrip-8f168": {
+      "hosting": {
+        "mytripstyle": [
+          "production"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
