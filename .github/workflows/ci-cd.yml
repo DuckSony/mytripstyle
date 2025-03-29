@@ -60,26 +60,26 @@ jobs:
           REACT_APP_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
           REACT_APP_FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
           REACT_APP_OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          REACT_APP_WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
-          REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          # REACT_APP_WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
+          # REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
       
       - name: 빌드 아티팩트 저장
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: build-files
           path: build/
           retention-days: 1
       
-      - name: 배포 성공 알림
-        if: success()
-        uses: slackapi/slack-github-action@v1
-        with:
-          payload: |
-            {
-              "text": "✅ MyTripStyle 스테이징 환경 배포가 완료되었습니다.\n커밋: ${{ github.event.head_commit.message }}\n배포자: ${{ github.actor }}"
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      # - name: 빌드 성공 알림
+      #   if: success()
+      #   uses: slackapi/slack-github-action@v1
+      #   with:
+      #     payload: |
+      #       {
+      #         "text": "✅ MyTripStyle 빌드가 완료되었습니다.\n커밋: ${{ github.event.head_commit.message }}\n빌드자: ${{ github.actor }}"
+      #       }
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   deploy-staging:
     name: 스테이징 환경 배포
@@ -89,13 +89,16 @@ jobs:
       (github.ref == 'refs/heads/develop' || 
       (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging'))
     runs-on: ubuntu-latest
-    environment: staging
+    # environment 설정 주석 처리
+    # environment:
+    #   name: staging
+    #   url: https://mytripstyle-627112795738.asia-east1.run.app
     steps:
       - name: 코드 체크아웃
         uses: actions/checkout@v3
       
       - name: 빌드 아티팩트 다운로드
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v2
         with:
           name: build-files
           path: build
@@ -110,94 +113,67 @@ jobs:
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
       
-      - name: 배포 성공 알림
-        if: success()
-        uses: slackapi/slack-github-action@v1
-        with:
-          payload: |
-            {
-              "text": "✅ MyTripStyle 스테이징 환경 배포가 완료되었습니다.\n커밋: ${{ github.event.head_commit.message }}\n배포자: ${{ github.actor }}"
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      # - name: 배포 성공 알림
+      #   if: success()
+      #   uses: slackapi/slack-github-action@v1
+      #   with:
+      #     payload: |
+      #       {
+      #         "text": "✅ MyTripStyle 스테이징 환경 배포가 완료되었습니다.\n커밋: ${{ github.event.head_commit.message }}\n배포자: ${{ github.actor }}"
+      #       }
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-  deploy-production:
-    name: 프로덕션 환경 배포
-    needs: build
-    if: |
-      success() && 
-      (github.ref == 'refs/heads/main' || 
-      (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production'))
-    runs-on: ubuntu-latest
-    environment: production
-    steps:
-      - name: 코드 체크아웃
-        uses: actions/checkout@v3
-      
-      - name: 빌드 아티팩트 다운로드
-        uses: actions/download-artifact@v3
-        with:
-          name: build-files
-          path: build
-      
-      - name: Firebase CLI 설정
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_PROD }}'
-          projectId: my-trip-style-prod
-          channelId: live
-        env:
-          FIREBASE_CLI_PREVIEWS: hostingchannels
-      
-      - name: 프로덕션 배포 슬랙 알림
-        if: success()
-        uses: slackapi/slack-github-action@v1
-        with:
-          payload: |
-            {
-              "text": "🚀 MyTripStyle 프로덕션 환경 배포가 완료되었습니다!\n커밋: ${{ github.event.head_commit.message }}\n배포자: ${{ github.actor }}"
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  # deploy-production:
+  #   name: 프로덕션 환경 배포
+  #   needs: build
+  #   if: |
+  #     success() && 
+  #     (github.ref == 'refs/heads/main' || 
+  #     (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production'))
+  #   runs-on: ubuntu-latest
+  #   # environment:
+  #   #   name: production
+  #   #   url: https://mytripstyle-627112795738.asia-east1.run.app
+  #   steps:
+  #     - name: 코드 체크아웃
+  #       uses: actions/checkout@v3
+  #     
+  #     - name: 빌드 아티팩트 다운로드
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: build-files
+  #         path: build
+  #     
+  #     - name: Firebase CLI 설정
+  #       uses: FirebaseExtended/action-hosting-deploy@v0
+  #       with:
+  #         repoToken: '${{ secrets.GITHUB_TOKEN }}'
+  #         firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_PROD }}'
+  #         projectId: my-trip-style-prod
+  #         channelId: live
+  #       env:
+  #         FIREBASE_CLI_PREVIEWS: hostingchannels
 
-  cloudflare-purge:
-    name: CDN 캐시 무효화
-    needs: [deploy-staging, deploy-production]
-    if: |
-      always() &&
-      (needs.deploy-staging.result == 'success' || needs.deploy-production.result == 'success')
-    runs-on: ubuntu-latest
-    steps:
-      - name: CloudFlare 캐시 무효화
-        uses: jakejarvis/cloudflare-purge-action@master
-        env:
-          CLOUDFLARE_ZONE: ${{ secrets.CLOUDFLARE_ZONE }}
-          CLOUDFLARE_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
-      
-      - name: 캐시 무효화 알림
-        if: success()
-        uses: slackapi/slack-github-action@v1
-        with:
-          payload: |
-            {
-              "text": "🔄 CloudFlare CDN 캐시가 성공적으로 초기화되었습니다."
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-  
+  # cloudflare-purge:
+  #   name: CDN 캐시 무효화
+  #   needs: [deploy-staging, deploy-production]
+  #   if: |
+  #     always() &&
+  #     (needs.deploy-staging.result == 'success' || needs.deploy-production.result == 'success')
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: CloudFlare 캐시 무효화
+  #       uses: jakejarvis/cloudflare-purge-action@master
+  #       env:
+  #         CLOUDFLARE_ZONE: ${{ secrets.CLOUDFLARE_ZONE }}
+  #         CLOUDFLARE_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
+
   notify-failure:
     name: 실패 알림
-    needs: [build, deploy-staging, deploy-production, cloudflare-purge]
+    needs: [build, deploy-staging]
     if: failure()
     runs-on: ubuntu-latest
     steps:
-      - name: 배포 실패 알림
-        uses: slackapi/slack-github-action@v1
-        with:
-          payload: |
-            {
-              "text": "❌ MyTripStyle CI/CD 파이프라인이 실패했습니다!\n작업: ${{ github.workflow }}\n커밋: ${{ github.event.head_commit.message }}\n실행자: ${{ github.actor }}\n자세한 내용은 GitHub Actions 로그를 확인하세요."
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      - name: 실패 메시지 출력
+        run: echo "워크플로우 실행이 실패했습니다."
