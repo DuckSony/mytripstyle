@@ -1,7 +1,7 @@
 {
   "hosting": {
-  "site": "mytripstyle",
-  "public": "build",
+    "site": "mytripstyle",
+    "public": "build",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -10,7 +10,10 @@
     "rewrites": [
       {
         "source": "**",
-        "destination": "/index.html"
+        "run": {
+          "serviceId": "mytripstyle",
+          "region": "asia-east1"
+        }
       }
     ],
     "headers": [

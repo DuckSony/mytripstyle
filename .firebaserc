@@ -7,6 +7,9 @@
       "hosting": {
         "mytripstyle": [
           "production"
+        ],
+        "app": [
+          "mytripstyle-app"
         ]
       }
     }

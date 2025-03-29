@@ -33,16 +33,16 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-  "start": "react-scripts start",
-  "build": "node build.js",
-  "test": "react-scripts test",
-  "eject": "react-scripts eject",
-  "lint": "eslint .",
-  "lint:fix": "eslint . --fix",
-  "cypress:open": "cypress open",
-  "cypress:run": "cypress run",
-  "e2e": "start-server-and-test start http://localhost:3000 cypress:run"
-},
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "e2e": "start-server-and-test start http://localhost:3000 cypress:run"
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
