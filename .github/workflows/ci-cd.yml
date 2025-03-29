@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 name: Basic CI
 
 on:
@@ -27,6 +26,3 @@ jobs:
       
       - name: Build project
         run: npm run build
-=======
-
->>>>>>> de5b96b8cade289caa0251fbd741f3759316ba78
